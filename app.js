@@ -21,6 +21,18 @@ app.use("/", indexRoutes);
 const authRoutes = require("./routes/auth.routes");
 app.use("/auth", authRoutes);
 
+const departmentRoutes = require("./routes/department.routes");
+app.use("/department", departmentRoutes);
+
+const doctorsRoutes = require("./routes/doctors.routes");
+app.use("/doctors", doctorsRoutes);
+
+const patientRoutes = require("./routes/patient.routes");
+app.use("/patient", patientRoutes);
+
+const gPractionerRoutes = require("./routes/gPractioner.routes");
+app.use("/gPractioner", gPractionerRoutes);
+
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
 

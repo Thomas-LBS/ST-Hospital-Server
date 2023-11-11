@@ -1,26 +1,25 @@
 const { Schema, model } = require("mongoose");
 
 // TODO: Please make sure you edit the User model to whatever makes sense in this case
-const userSchema = new Schema(
+const departmentSchema = new Schema(
   {
-    email: {
-      type: String,
-      required: [true, "Email is required."],
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: [true, "Password is required."],
-    },
-    username: {
+    name: {
       type: String,
       required: [true, "Name is required."],
+      unique: true,
+      lowercase: true,
+      
     },
-    role: {
+    image: {
       type: String,
-      enum: ['admin', 'doctor', 'patient'],
-      default: 'patient', 
-      required: true,
+     
+    },
+    description: {
+      type: String,
+      
+    },
+    doctors:{
+        type:[{type: Schema.Types.ObjectId, ref:'Doctor'}]
     }
   },
   {
@@ -29,6 +28,6 @@ const userSchema = new Schema(
   }
 );
 
-const User = model("User", userSchema);
+const Department = model("Department", departmentSchema);
 
 module.exports = User;

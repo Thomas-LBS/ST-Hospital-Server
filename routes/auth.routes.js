@@ -18,8 +18,8 @@ const saltRounds = 10;
 
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
-  const { email, password, name } = req.body;
-
+  const { email, password, name,role } = req.body;
+console.log(email, password, name ,role)
   // Check if email or password or name are provided as empty strings
   if (email === "" || password === "" || name === "") {
     res.status(400).json({ message: "Provide email, password and name" });
@@ -33,15 +33,15 @@ router.post("/signup", (req, res, next) => {
     return;
   }
 
-  // This regular expression checks password for special characters and minimum length
-  const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
-  if (!passwordRegex.test(password)) {
-    res.status(400).json({
-      message:
-        "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
-    });
-    return;
-  }
+  // // This regular expression checks password for special characters and minimum length
+  // const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+  // if (!passwordRegex.test(password)) {
+  //   res.status(400).json({
+  //     message:
+  //       "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
+  //   });
+  //   return;
+  // }
 
   // Check the users collection if a user with the same email already exists
   User.findOne({ email })
@@ -58,16 +58,21 @@ router.post("/signup", (req, res, next) => {
 
       // Create the new user in the database
       // We return a pending promise, which allows us to chain another `then`
-      return User.create({ email, password: hashedPassword, name });
+      console.log("hashedPassword",hashedPassword)
+      return User.create({ email, password: hashedPassword, username:name ,role});
     })
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
       // We should never expose passwords publicly
-      const { email, name, _id } = createdUser;
+      if (!createdUser) {
+        res.status(500).json({ message: 'Error creating user.' });
+        return;
+      }
+      const { email, name, _id ,role} = createdUser;
 
       // Create a new object that doesn't expose the password
-      const user = { email, name, _id };
-
+      const user = { email, name, _id ,role};
+console.log(user)
       // Send a json response containing the user object
       res.status(201).json({ user: user });
     })
@@ -76,16 +81,16 @@ router.post("/signup", (req, res, next) => {
 
 // POST  /auth/login - Verifies email and password and returns a JWT
 router.post("/login", (req, res, next) => {
-  const { email, password } = req.body;
+  const { name, password } = req.body;
 
   // Check if email or password are provided as empty string
-  if (email === "" || password === "") {
+  if (name === "" || password === "") {
     res.status(400).json({ message: "Provide email and password." });
     return;
   }
 
   // Check the users collection if a user with the same email exists
-  User.findOne({ email })
+  User.findOne({ username:name })
     .then((foundUser) => {
       if (!foundUser) {
         // If the user is not found, send an error response
@@ -98,10 +103,10 @@ router.post("/login", (req, res, next) => {
 
       if (passwordCorrect) {
         // Deconstruct the user object to omit the password
-        const { _id, email, name } = foundUser;
+        const { _id, email, username,role } = foundUser;
 
         // Create an object that will be set as the token payload
-        const payload = { _id, email, name };
+        const payload = { _id, email, username ,role};
 
         // Create a JSON Web Token and sign it
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
