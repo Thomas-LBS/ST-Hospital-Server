@@ -45,7 +45,7 @@ Students must submit the following deliverables in order for the project to be d
 ## UX/UI Choices
 
 <h2>Fonts</h2>
-  --text: 'PT Sans', sans-serif;
+  --text: 'that', sans-serif;
   --title: 'Nunito', sans-serif;
 
 <h2>Color Palette</h2>
