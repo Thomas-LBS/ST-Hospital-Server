@@ -22,7 +22,7 @@ const authRoutes = require("./routes/auth.routes");
 app.use("/auth", authRoutes);
 
 const departmentRoutes = require("./routes/department.routes");
-app.use("/department", departmentRoutes);
+app.use("/departments", departmentRoutes);
 
 const doctorsRoutes = require("./routes/doctors.routes");
 app.use("/doctors", doctorsRoutes);
