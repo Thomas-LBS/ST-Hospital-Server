@@ -12,9 +12,13 @@ const doctorSchema = new Schema(
       required: [true, "Name is required."],
     },
     department: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Department",
+      type:[ {type: Schema.Types.ObjectId,
+      ref: "Department"}],
       required: true,
+    },
+    position: {
+      type: String,
+      enum: ["Chief", "Attending", "General"], 
     },
     image: { type: String, default: "default_image_link.jpg" },
   },
@@ -26,4 +30,4 @@ const doctorSchema = new Schema(
 
 const Doctor = model("Doctor", doctorSchema);
 
-module.exports = User;
+module.exports = Doctor;
