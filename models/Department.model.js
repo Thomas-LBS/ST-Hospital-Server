@@ -6,9 +6,6 @@ const departmentSchema = new Schema(
     name: {
       type: String,
       required: [true, "Name is required."],
-      unique: true,
-      lowercase: true,
-      
     },
     image: {
       type: String,
@@ -30,4 +27,4 @@ const departmentSchema = new Schema(
 
 const Department = model("Department", departmentSchema);
 
-module.exports = User;
+module.exports = Department;
