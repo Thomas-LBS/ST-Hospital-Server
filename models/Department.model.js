@@ -16,7 +16,7 @@ const departmentSchema = new Schema(
       
     },
     doctors:{
-        type:[{type: Schema.Types.ObjectId, ref:'Doctors'}]
+        type:[{type: Schema.Types.ObjectId, ref:'Doctor'}]
     }
   },
   {

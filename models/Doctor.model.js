@@ -20,8 +20,13 @@ const doctorSchema = new Schema(
       type: String,
       enum: ["Chief", "Attending", "General"], 
     },
+    appointment:{
+      type:[ {type: Schema.Types.ObjectId,
+        ref: "Appointment"}],
+    },
     image: { type: String, default: "default_image_link.jpg" },
   },
+  
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
     timestamps: true,

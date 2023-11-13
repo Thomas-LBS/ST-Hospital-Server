@@ -33,6 +33,9 @@ app.use("/patient", patientRoutes);
 const gPractionerRoutes = require("./routes/gPractioner.routes");
 app.use("/gPractioner", gPractionerRoutes);
 
+const createRoutes = require("./routes/create.routes");
+app.use("/create", createRoutes);
+
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
 
