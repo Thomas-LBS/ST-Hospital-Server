@@ -1,16 +1,16 @@
-# Ironhack-Project-3-S.T. Hospital
+# Ironhack-Project-3-S.T. Hospital - MERN App (MongoDB, Express, React, Node)
 
 <h1>Links</h1>
 
-<h3>Follow the Trello Board : <a href="https://trello.com/invite/b/LJqzCzCl/ATTI2457db54afb77558ab662601bc60a286E6926B91/ironhack-project3-st-hospital">Here</a></h3>
+<h3>Follow the Trello Board : <a href="https://trello.com/invite/b/LJqzCzCl/ATTI2457db54afb77558ab662601bc60a286E6926B91/ironhack-project3-st-hospital" target="_blank">Here</a></h3>
 
-<h3>Slides presentation : <a href="">Here</a></h3>
+<h3>Slides presentation : <a href="#" target="_blank"></a></h3>
 
-<h3>Github Server repository : <a href="https://github.com/Thomas-LBS/st-hospital-server.git">Here</a></h3>
+<h3>Github Server repository : <a href="https://github.com/Thomas-LBS/ST-Hospital-Server.git" target="_blank" >Here</a></h3>
 
-<h3>Github Client repository : <a href="">Here</a></h3>
+<h3>Github Client repository : <a href="https://github.com/Sunitha-Arockia-Dass/ST-Hospital-Client.git" target="_blank" >Here</a></h3>
 
-<h3>App deployed with Cyclic : <a href="">Here</a></h3>
+<h3>App deployed with ?? : <a href="#" target="_blank"></a></h3>
 
 
 <h1>Introduction</h1>
@@ -45,20 +45,44 @@ Students must submit the following deliverables in order for the project to be d
 ## UX/UI Choices
 
 <h2>Fonts</h2>
-  --text: 'that', sans-serif;
-  --title: 'Nunito', sans-serif;
+
+  --ft-Headings: "Sofia Sans", sans-serif;
+  --ft-Texte: "Poppins", sans-serif;
 
 <h2>Color Palette</h2>
 
-The color plum is a symbol of new beginnings, enthusiasm and fresh energy. It is also a color that represents strength, determination and confidence :
---plumd: #CE78CE;
---plumm: #DDA0DD;
---pluml: #EED2EE;
---citrine: #EAD94C;
---plumdark: #963696;
---white: #ffffff;
---grey: #6b5f6b;
---black: #000000;
+  --clr-light: hsl(220, 10%, 95%);
+  --clr-medium: hsl(220, 10%, 30%);
+  --clr-dark: hsl(220, 10%, 12%);
+ 
+Light blue is a peaceful, calming color. According to color psychology, blue is associated with trustworthiness and reliability. Blue is also said to promote feelings of tranquility; light blue’s gentle appearance means it is particularly likely to make that impression.
+  --clr-blue: hsl(193, 90%, 53%);
+  --clr-blue-medium: hsl(193, 90%, 25%);
+
+Green is the result of mixing blue and yellow. Green has two paradoxical meanings—one being nature and the environment and the other being money. When it comes to nature, green represents renewal and growth. It is also associated with wealth, prestige, and greed.
+  --clr-green: hsl(157, 95%, 53%);
+  --clr-green-medium: hsl(157, 95%, 25%);
+
+message to the user colors :
+  --info-msg: hsl(290, 55%, 53%);
+  --ok-msg: hsl(70, 55%, 53%);
+  --careful-msg: hsl(35, 55%, 53%);
+  --danger-msg: hsl(0, 55%, 53%);
+
+
+## DARKMODE
+using JS DOMmanipulation to change the mode of the browser, the css, register user choice to the localstorage.
+Colors : 
+  --foreground: var(--clr-light);
+  --background: var(--clr-dark);
+  --clr-medium: hsl(220, 10%, 77%);
+  --clr-blue-medium: hsl(193, 90%, 77%);
+  --clr-green-medium: hsl(157, 95%, 77%);
+
+
+## LANGUAGES
+using react usecontext for french or english, just to show how it works on the navbar and the homepage
+
 
 ## CRUD
 
@@ -71,6 +95,7 @@ User can create members, each members can be updated, deleted and acces to 3 lev
 <h2>Agenda</h2>
 User can create appointments, each appointment can be updated, deleted or display to see details.
 
+
 ## MONGOOSE MODELS
 
 <ul>
@@ -80,25 +105,31 @@ User can create appointments, each appointment can be updated, deleted or displa
   <li>Data.model.jsfor BMI calculator with feedback</li> 
 </ul>
 
+
 ## Agenda
 
 all members can accès to the same agenda.
+
 
 ## Healthify
 
 this the art of the app that allow you to calculate and follow your BMI, depending on it you will have acces to healthy lifestyle to gain or loss weight depending of the last BMI and adapted to the user diet Paleo, Vegan or Vegetarian.
 
+
 ## app.js
 
 contain the app.use informations
+
 
 ## routes folder
 
 contain all the routes to display all the pages and run the form
 
+
 ## script.js
 
 contain the javascript code for DOM manipulations
+
 
 ## API used
 
