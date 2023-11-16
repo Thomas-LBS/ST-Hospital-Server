@@ -14,9 +14,11 @@ router.get("/", (req, res, next) => {
     });
 });
 
+
 router.post("/add", (req, res, next) => {
   const doctorData = req.body;
   console.log("doctor Data", doctorData);
+  
   Doctor.create(doctorData)
     .then((addedDoctor) => {
       res.json(addedDoctor);
