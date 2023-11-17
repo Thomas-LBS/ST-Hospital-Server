@@ -36,6 +36,9 @@ app.use("/gPractioner", gPractionerRoutes);
 const createRoutes = require("./routes/create.routes");
 app.use("/create", createRoutes);
 
+const appointmentRoutes = require("./routes/appointment.routes");
+app.use("/appointment", appointmentRoutes);
+
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app)
 
