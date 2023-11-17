@@ -15,7 +15,7 @@ router.get("/", (req, res, next) => {
 });
 router.post("/create", async (req, res, next) => {
   try {
-    const { user,department,doctor,start } = req.body;
+    const { user,department,doctor,start,end } = req.body;
 
           // Fetch the actual user, department, and doctor documents
           const fetchedUser = await User.findById(user);
@@ -28,6 +28,7 @@ router.post("/create", async (req, res, next) => {
         department: fetchedDept.id,
         doctor: fetchedDoctor.id,
         start,
+        end
       });
 
     res.json(createdAppointment);
@@ -37,4 +38,18 @@ router.post("/create", async (req, res, next) => {
     res.status(500).json({ error: "Error creating appointment" });
   }
 });
+
+router.get("/doctor/:id", (req, res, next) => {
+    const doctorid = req.params.id;
+    console.log(doctorid)
+    Appointment.find({doctor:doctorid})
+      .populate("user department doctor")
+      .then((appts) => {
+        res.json(appts);
+      });
+  });
+
+
+
+
 module.exports = router;

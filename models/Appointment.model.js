@@ -22,10 +22,10 @@ const appointmentSchema = new Schema(
       type: Date,
       // required: [true, "Start Time is required."],
     },
-    // end:{
-    //   type: Date,
-    //   required: [true, "End Time is required."],
-    // },
+    end:{
+      type: Date,
+      // required: [true, "End Time is required."],
+    },
     // description:{
     //   type: String,
     //   required: [true, "Description is required."],
@@ -36,6 +36,7 @@ const appointmentSchema = new Schema(
     timestamps: true,
   }
 );
+
 
 const Appointment = model("Appointment", appointmentSchema);
 
