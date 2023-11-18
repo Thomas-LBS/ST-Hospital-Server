@@ -48,6 +48,16 @@ router.get("/doctor/:id", (req, res, next) => {
         res.json(appts);
       });
   });
+router.get("/patient/:id", (req, res, next) => {
+    const patientid = req.params.id;
+    console.log(patientid)
+    Appointment.find({user:patientid})
+      .populate("user department doctor")
+      .then((appts) => {
+        console.log(appts)
+        res.json(appts);
+      });
+  });
 
 
 
