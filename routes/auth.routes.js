@@ -18,11 +18,11 @@ const saltRounds = 10;
 
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
-  const { email, password, name,role } = req.body;
-console.log(email, password, name ,role)
+  const { email, password, name,role ,firstname,lastname,patientDetails} = req.body;
+// console.log(email, password, name ,role)
   // Check if email or password or name are provided as empty strings
-  if (email === "" || password === "" || name === "") {
-    res.status(400).json({ message: "Provide email, password and name" });
+  if (email === "" || password === "" || name === "" || firstname === "" || lastname === ""  ) {
+    res.status(400).json({ message: "Provide email, password , name , firstname and lastname" });
     return;
   }
 
@@ -59,7 +59,7 @@ console.log(email, password, name ,role)
       // Create the new user in the database
       // We return a pending promise, which allows us to chain another `then`
       console.log("hashedPassword",hashedPassword)
-      return User.create({ email, password: hashedPassword, username:name ,role});
+      return User.create({ email, password: hashedPassword, username:name ,role,firstname:firstname,lastname:lastname,patientDetails:patientDetails});
     })
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
@@ -91,7 +91,9 @@ router.post("/login", (req, res, next) => {
 
   // Check the users collection if a user with the same email exists
   User.findOne({ username:name })
+  .populate('patientDetails.gp')
     .then((foundUser) => {
+      console.log(foundUser)
       if (!foundUser) {
         // If the user is not found, send an error response
         res.status(401).json({ message: "User not found." });
@@ -103,11 +105,11 @@ router.post("/login", (req, res, next) => {
 
       if (passwordCorrect) {
         // Deconstruct the user object to omit the password
-        const { _id, email, username,role } = foundUser;
+        const { _id, email, username,role ,firstname,lastname,patientDetails} = foundUser;
 
         // Create an object that will be set as the token payload
-        const payload = { _id, email, username ,role};
-
+        const payload = { _id, email, username,role ,firstname,lastname,patientDetails}
+// console.log(payload)
         // Create a JSON Web Token and sign it
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
           algorithm: "HS256",

@@ -2,6 +2,139 @@ const express = require("express");
 const router = express.Router();
 const Doctor = require("../models/Doctor.model");
 const Department = require("../models/Department.model");
+const GPractice=require('../models/GPractice.model')
+const gpracticeData = [
+  {
+    name: "Julius Gezondheidcentrum",
+    email: "emily.johnson@example.com",
+    phoneNumber: 1234567890,
+    address: {
+      houseNumber: "22",
+      street: "Maple Lane",
+      city: "Springfield",
+      postalCode: "54321",
+      country: "USA"
+    },
+    image: "https://example.com/emily_johnson.jpg"
+  },
+  {
+    name: "De Meridiaan",
+    email: "michael.brown@example.com",
+    phoneNumber: 9876543210,
+    address: {
+      houseNumber: "7C",
+      street: "Oak Street",
+      city: "New York City",
+      postalCode: "12345",
+      country: "USA"
+    },
+    image: "https://example.com/michael_brown.jpg"
+  },
+  {
+    name: "Benschop Huisartsenpraktijk",
+    email: "sophia.martinez@example.com",
+    phoneNumber: 5554443333,
+    address: {
+      houseNumber: "101",
+      street: "Main Avenue",
+      city: "Los Angeles",
+      postalCode: "67890",
+      country: "USA"
+    },
+    image: "https://example.com/sophia_martinez.jpg"
+  },
+  {
+    name: "Dukatenburg Huisartsenpraktijk ",
+    email: "benjamin.lee@example.com",
+    phoneNumber: 1112223333,
+    address: {
+      houseNumber: "55",
+      street: "Cedar Road",
+      city: "San Francisco",
+      postalCode: "13579",
+      country: "USA"
+    },
+    image: "https://example.com/benjamin_lee.jpg"
+  },
+  {
+    name: "Bosboomstraat Huisartsenpraktijk",
+    email: "olivia.garcia@example.com",
+    phoneNumber: 9998887777,
+    address: {
+      houseNumber: "3D",
+      street: "Pine Street",
+      city: "Chicago",
+      postalCode: "24680",
+      country: "USA"
+    },
+    image: "https://example.com/olivia_garcia.jpg"
+  },
+  {
+    name: "Dr. Daniel Nguyen",
+    email: "daniel.nguyen@example.com",
+    phoneNumber: 7776665555,
+    address: {
+      houseNumber: "88",
+      street: "Elm Avenue",
+      city: "Miami",
+      postalCode: "97531",
+      country: "USA"
+    },
+    image: "https://example.com/daniel_nguyen.jpg"
+  },
+  {
+    name: "Biltstraat Huisartsenpraktijk",
+    email: "emma.wilson@example.com",
+    phoneNumber: 3332221111,
+    address: {
+      houseNumber: "11B",
+      street: "Willow Lane",
+      city: "Seattle",
+      postalCode: "86420",
+      country: "USA"
+    },
+    image: "https://example.com/emma_wilson.jpg"
+  },
+  {
+    name: "Plettenburg Huisartsenpraktijk",
+    email: "liam.hernandez@example.com",
+    phoneNumber: 6667778888,
+    address: {
+      houseNumber: "45",
+      street: "Cypress Road",
+      city: "Houston",
+      postalCode: "75241",
+      country: "USA"
+    },
+    image: "https://example.com/liam_hernandez.jpg"
+  },
+  {
+    name: "Gezondheidscentrum De Schans",
+    email: "isabella.adams@example.com",
+    phoneNumber: 2223334444,
+    address: {
+      houseNumber: "77",
+      street: "Chestnut Street",
+      city: "Philadelphia",
+      postalCode: "36912",
+      country: "USA"
+    },
+    image: "https://example.com/isabella_adams.jpg"
+  },
+  {
+    name: "Huisartsenpost Nieuwegein",
+    email: "noah.taylor@example.com",
+    phoneNumber: 4445556666,
+    address: {
+      houseNumber: "29",
+      street: "Birch Lane",
+      city: "Boston",
+      postalCode: "58274",
+      country: "USA"
+    },
+    image: "https://example.com/noah_taylor.jpg"
+  }
+];
 
 const departmentsData = [
   {
@@ -571,5 +704,16 @@ router.get("/", async (req, res, next) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+router.get("/gp", async (req, res, next) => {
+GPractice.create(gpracticeData)
+.then(response=>{
+  console.log('created successfully')
+})
+.catch(error=>{
+  console.log('error',error)
+})
+
+})
 
 module.exports = router;

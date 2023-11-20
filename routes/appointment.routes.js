@@ -58,6 +58,28 @@ router.get("/patient/:id", (req, res, next) => {
         res.json(appts);
       });
   });
+router.patch("/patient/update/:id", (req, res, next) => {
+    const apptId = req.params.id;
+    const newStartTime=req.body.slotStartTime
+    const newendTime=req.body.slotEndTime
+    Appointment.findByIdAndUpdate(apptId,{start:newStartTime,end:newendTime},{new:true})
+      .then((appts) => {
+        console.log(appts)
+        res.json(appts);
+      });
+  });
+
+
+
+router.delete("/patient/delete/:id", (req, res, next) => {
+    const apptid = req.params.id;
+    console.log(apptid)
+    Appointment.findByIdAndDelete(apptid)
+      .then((appts) => {
+        console.log(appts)
+        res.json(appts);
+      });
+  });
 
 
 
