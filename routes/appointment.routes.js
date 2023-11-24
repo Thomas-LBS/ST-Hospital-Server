@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Appointment = require("../models/Appointment.model");
 const User = require("../models/User.model");
+const Appointment = require("../models/Appointment.model");
 const Department = require("../models/Department.model");
 const Doctor = require("../models/Doctor.model");
 const mongoose = require("mongoose");
@@ -45,6 +45,38 @@ router.get("/doctor/:id", (req, res, next) => {
     Appointment.find({doctor:doctorid})
       .populate("user department doctor")
       .then((appts) => {
+        res.json(appts);
+      });
+  });
+router.get("/patient/:id", (req, res, next) => {
+    const patientid = req.params.id;
+    console.log(patientid)
+    Appointment.find({user:patientid})
+      .populate("user department doctor")
+      .then((appts) => {
+        console.log(appts)
+        res.json(appts);
+      });
+  });
+router.patch("/patient/update/:id", (req, res, next) => {
+    const apptId = req.params.id;
+    const newStartTime=req.body.slotStartTime
+    const newendTime=req.body.slotEndTime
+    Appointment.findByIdAndUpdate(apptId,{start:newStartTime,end:newendTime},{new:true})
+      .then((appts) => {
+        console.log(appts)
+        res.json(appts);
+      });
+  });
+
+
+
+router.delete("/patient/delete/:id", (req, res, next) => {
+    const apptid = req.params.id;
+    console.log(apptid)
+    Appointment.findByIdAndDelete(apptid)
+      .then((appts) => {
+        console.log(appts)
         res.json(appts);
       });
   });

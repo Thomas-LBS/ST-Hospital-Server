@@ -16,12 +16,35 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
+    firstname: {
+      type: String,
+      required: [true, "First Name is required."],
+    },
+    lastname: {
+      type: String,
+      required: [true, "Last Name is required."],
+    },
     role: {
       type: String,
-      enum: ['admin', 'doctor', 'patient'],
-      default: 'patient', 
+      enum: ["admin", "doctor", "patient"],
+      default: "patient",
       required: true,
-    }
+    },
+    patientDetails: {
+      type: {
+        dateOfBirth: Date,
+        contactNumber: String,
+        gp: [{ type: Schema.Types.ObjectId, ref: "GPractice" }],
+        address: {
+          houseNumber: String,
+          street: String,
+          city: String,
+          postalCode: String,
+          country: String,
+        },
+      },
+      required: false,
+    },
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`

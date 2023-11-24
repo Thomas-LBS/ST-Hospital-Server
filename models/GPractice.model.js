@@ -1,23 +1,30 @@
 const { Schema, model } = require("mongoose");
 
 // TODO: Please make sure you edit the User model to whatever makes sense in this case
-const GPractionerSchema = new Schema(
+const GPracticeSchema = new Schema(
   {
+    name:{
+      type: String,
+    },
     email: {
       type: String,
       required: [true, "Email is required."],
       unique: true,
-      lowercase: true,
-      trim: true,
     },
-    password: {
-      type: String,
+    phoneNumber: {
+      type: Number,
       required: [true, "Password is required."],
     },
-    name: {
-      type: String,
-      required: [true, "Name is required."],
-    },
+    address: {
+      houseNumber: String,
+      street: String,
+      city: String,
+      postalCode: String,
+      country: String
+    }  ,
+    image:{
+      type:String
+    }
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
@@ -25,6 +32,6 @@ const GPractionerSchema = new Schema(
   }
 );
 
-const GPractioner = model("GPractioner", GPractionerSchema);
+const GPractice = model("GPractice", GPracticeSchema);
 
-module.exports = User;
+module.exports = GPractice;

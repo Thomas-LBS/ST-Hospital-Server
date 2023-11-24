@@ -30,8 +30,8 @@ app.use("/doctors", doctorsRoutes)
 const patientRoutes = require("./routes/patient.routes")
 app.use("/patient", patientRoutes)
 
-const gPractionerRoutes = require("./routes/gPractioner.routes");
-app.use("/gPractioner", gPractionerRoutes);
+const gPractionerRoutes = require("./routes/gPractice.routes");
+app.use("/gPractice", gPractionerRoutes);
 
 const createRoutes = require("./routes/create.routes");
 app.use("/create", createRoutes);

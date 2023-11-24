@@ -13,7 +13,7 @@ const doctorSchema = new Schema(
     },
     department: {
       type:[ {type: Schema.Types.ObjectId,
-      ref: "Department"}],
+            ref: "Department"}],
       required: true,
     },
     position: {

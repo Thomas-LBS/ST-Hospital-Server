@@ -18,11 +18,11 @@ const saltRounds = 10;
 
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
-  const { email, password, name,role } = req.body;
-console.log(email, password, name ,role)
+  const { email, password, name,role ,firstname,lastname,patientDetails} = req.body;
+// console.log(email, password, name ,role)
   // Check if email or password or name are provided as empty strings
-  if (email === "" || password === "" || name === "") {
-    res.status(400).json({ message: "Provide email, password and name" });
+  if (email === "" || password === "" || name === "" || firstname === "" || lastname === ""  ) {
+    res.status(400).json({ message: "Provide email, password , name , firstname and lastname" });
     return;
   }
 
@@ -59,7 +59,7 @@ console.log(email, password, name ,role)
       // Create the new user in the database
       // We return a pending promise, which allows us to chain another `then`
       console.log("hashedPassword",hashedPassword)
-      return User.create({ email, password: hashedPassword, username:name ,role});
+      return User.create({ email, password: hashedPassword, username:name ,role,firstname:firstname,lastname:lastname,patientDetails:patientDetails});
     })
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
@@ -91,7 +91,9 @@ router.post("/login", (req, res, next) => {
 
   // Check the users collection if a user with the same email exists
   User.findOne({ username:name })
+  .populate('patientDetails.gp')
     .then((foundUser) => {
+      console.log(foundUser)
       if (!foundUser) {
         // If the user is not found, send an error response
         res.status(401).json({ message: "User not found." });
@@ -103,11 +105,11 @@ router.post("/login", (req, res, next) => {
 
       if (passwordCorrect) {
         // Deconstruct the user object to omit the password
-        const { _id, email, username,role } = foundUser;
+        const { _id, email, username,role ,firstname,lastname,patientDetails} = foundUser;
 
         // Create an object that will be set as the token payload
-        const payload = { _id, email, username ,role};
-
+        const payload = { _id, email, username,role ,firstname,lastname,patientDetails}
+// console.log(payload)
         // Create a JSON Web Token and sign it
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
           algorithm: "HS256",
@@ -132,5 +134,77 @@ router.get("/verify", isAuthenticated, (req, res, next) => {
   // Send back the token payload object containing the user data
   res.status(200).json(req.payload);
 });
+router.put("/update/:id", (req, res, next) => {
+  const userId = req.params.id;
+  const updatedUserInfo=req.body
+  let { email, password, name,role ,firstname,lastname,patientDetails,newPassword} = updatedUserInfo;
+  if (email === "" || password === "" || name === "" || firstname === "" || lastname === ""  ) {
+    res.status(400).json({ message: "Provide email, password , name , firstname and lastname" });
+    return;
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if (!emailRegex.test(email)) {
+    res.status(400).json({ message: "Provide a valid email address." });
+    return;
+  }
+  // // This regular expression checks password for special characters and minimum length
+  // const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+  // if (!passwordRegex.test(password)) {
+  //   res.status(400).json({
+  //     message:
+  //       "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
+  //   });
+  //   return;
+  // }
+
+  if (newPassword === "") {
+    newPassword = password;
+  }
+  User.findById(userId)
+    .then((foundUser) => {
+      // console.log("foundUser", foundUser);
+      // If the user with the same email already exists, send an error response
+      if (!foundUser) {
+        res.status(400).json({ message: "User Not Found." });
+        return;
+      }
+      const isSamePassword = bcrypt.compareSync(password, foundUser.password);
+
+    if (!isSamePassword) {
+      res.status(400).json({ errorMessage: "Wrong credentials." });
+      return;
+    }
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hashedPassword = bcrypt.hashSync(newPassword, salt);
+
+        // bcrypt
+        //   .genSalt(saltRounds)
+        //   .then((salt) => bcrypt.hashSync(newPassword, salt))
+        //   .then((hashedPassword) => {
+            // Create a user and save it in the database
+            return User.findByIdAndUpdate(
+              userId,
+             { email, password:hashedPassword, username:name,role ,firstname,lastname,patientDetails}
+              ,
+              { new: true }
+            ).then((updatedUser) => {
+              if (!updatedUser) {
+                res.status(500).json({ message: "Error creating user." });
+                return;
+              }
+              const { email, name, _id, role } = updatedUser;
+              const user = { email, name, _id, role };
+              console.log(user);
+              // Send a json response containing the user object
+              res.status(201).json({ user: user });
+              
+            });
+          })
+          .catch((err) => next(err)); // In this case, we send error handling to the error handling middleware.
+  
+      
+    // })
+});
+
 
 module.exports = router;
