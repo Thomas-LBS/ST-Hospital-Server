@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const Department = require("../models/Department.model");
-
+// const mailjet = require("node-mailjet").apiConnect(
+//   process.env.MAILJET_API_KEY,
+//   process.env.MAILJET_API_SECRET
+// );
 
 router.get("/", (req, res, next) => {
   Department.find()
@@ -51,7 +54,7 @@ router.put("/update/:id", (req, res, next) => {
     });
 });
 
-router.delete("/:id", (req, res, next) => {
+router.delete("/delete/:id", (req, res, next) => {
   const deptId = req.params.id;
   Department.findByIdAndDelete(deptId).then((dept) => {
     res.json("Dept deleted");
