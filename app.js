@@ -21,8 +21,8 @@ app.use("/", indexRoutes)
 const authRoutes = require("./routes/auth.routes")
 app.use("/auth", authRoutes)
 
-const departmentRoutes = require("./routes/department.routes");
-app.use("/departments", departmentRoutes);
+const departmentRoutes = require("./routes/department.routes")
+app.use("/departments", departmentRoutes)
 
 const doctorsRoutes = require("./routes/doctors.routes")
 app.use("/doctors", doctorsRoutes)
@@ -30,14 +30,14 @@ app.use("/doctors", doctorsRoutes)
 const patientRoutes = require("./routes/patient.routes")
 app.use("/patient", patientRoutes)
 
-const gPractionerRoutes = require("./routes/gPractice.routes");
-app.use("/gPractice", gPractionerRoutes);
+const gPractionerRoutes = require("./routes/gPractice.routes")
+app.use("/gPractice", gPractionerRoutes)
 
-const createRoutes = require("./routes/create.routes");
-app.use("/create", createRoutes);
+const createRoutes = require("./routes/create.routes")
+app.use("/create", createRoutes)
 
-const appointmentRoutes = require("./routes/appointment.routes");
-app.use("/appointment", appointmentRoutes);
+const appointmentRoutes = require("./routes/appointment.routes")
+app.use("/appointment", appointmentRoutes)
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app)
