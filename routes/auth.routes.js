@@ -136,7 +136,10 @@ router.get("/verify", isAuthenticated, (req, res, next) => {
 });
 router.put("/update/:id", (req, res, next) => {
   const userId = req.params.id;
+  console.log('userId',userId)
   const updatedUserInfo=req.body
+  console.log('updatedUserInfo',updatedUserInfo)
+
   let { email, password, name,role ,firstname,lastname,patientDetails,newPassword} = updatedUserInfo;
   if (email === "" || password === "" || name === "" || firstname === "" || lastname === ""  ) {
     res.status(400).json({ message: "Provide email, password , name , firstname and lastname" });
@@ -188,12 +191,13 @@ router.put("/update/:id", (req, res, next) => {
               ,
               { new: true }
             ).then((updatedUser) => {
+              console.log('updated user',updatedUser)
               if (!updatedUser) {
                 res.status(500).json({ message: "Error creating user." });
                 return;
               }
-              const { email, name, _id, role } = updatedUser;
-              const user = { email, name, _id, role };
+              const { email, username, _id, role } = updatedUser;
+              const user = { email, username, _id, role };
               console.log(user);
               // Send a json response containing the user object
               res.status(201).json({ user: user });
