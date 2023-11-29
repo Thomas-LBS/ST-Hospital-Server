@@ -52,8 +52,8 @@ require("./error-handling")(app);
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", 
-    methods: ["GET", "POST"], 
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
   },
 });
 // const userSockets = {}
@@ -113,23 +113,77 @@ const io = new Server(server, {
 
 //     socket.emit("messageSentConfirmation", { recipientId, message });
 //   });
- 
+
 // });
-const userSockets = {};
+// const userSockets = {};
+
+// io.on("connection", (socket) => {
+//   socket.on("login", async (userId) => {
+//     console.log(userId);
+//     try {
+//       let userSocketData = await UserSocketModel.findOne({ userId });
+
+//       if (!userSocketData) {
+//         userSocketData = await UserSocketModel.create({ userId, socketId: socket.id });
+//       }
+
+//       userSockets[userId] = socket;
+
+//       // Handle disconnect logic if needed
+//       socket.on("disconnect", async () => {
+//         try {
+//           await UserSocketModel.findByIdAndUpdate(
+//             userId,
+//             { $set: { online: false } },
+//             { new: true }
+//           );
+//           console.log(`User disconnected: ${userId}`);
+//           delete userSockets[userId];
+//         } catch (error) {
+//           console.error("Error on user disconnection:", error);
+//         }
+//       });
+//     } catch (error) {
+//       console.error("Error:", error);
+//     }
+//   });
+
+//   socket.on("privateMessage", async (messageData) => {
+//     const { recipientId, message, userId } = messageData;
+//     console.log("privateMessage triggered:");
+//     console.log("message:", messageData.message);
+
+//     const receivingMessage = {
+//       senderId: userId,
+//       message,
+//       recipientId:recipientId
+//     };
+
+//     io.to(recipientId).emit("testMessage", receivingMessage);
+//     console.log("Message sent:", receivingMessage)
+//     // Optionally, emit an acknowledgment back to the sender
+//     socket.emit("messageSentConfirmation", { recipientId, message });
+//   });
+// });
+
+// const userSockets = {};
 
 io.on("connection", (socket) => {
   socket.on("login", async (userId) => {
-    console.log(userId);
+    console.log("userId", userId);
     try {
       let userSocketData = await UserSocketModel.findOne({ userId });
 
       if (!userSocketData) {
-        userSocketData = await UserSocketModel.create({ userId, socketId: socket.id });
+        userSocketData = await UserSocketModel.create({
+          userId,
+          socketId: socket.id,
+        });
       }
 
       userSockets[userId] = socket;
-
-      // Handle disconnect logic if needed
+      // console.log("userSockets[userId]", userSockets[userId]);
+      // Handle disconnect logic when the user disconnects
       socket.on("disconnect", async () => {
         try {
           await UserSocketModel.findByIdAndUpdate(
@@ -147,24 +201,27 @@ io.on("connection", (socket) => {
       console.error("Error:", error);
     }
   });
-
   socket.on("privateMessage", async (messageData) => {
     const { recipientId, message, userId } = messageData;
-    console.log("privateMessage triggered:");
-    console.log("message:", messageData.message);
-    
-    const receivingMessage = {
-      senderId: userId,
-      message,
-      recipientId:recipientId
-    };
+    console.log(messageData.message);
+    // Handling user association with socket
+    try {
+      // Retrieve the socketId associated with the recipientId from MongoDB
+      const recipientSocketInfo = await UserSocketModel.findOne({ userId: recipientId });
+      const recipientSocketId = recipientSocketInfo.socketId;
+  console.log('recipientSocketId',recipientSocketId)
+      // Emit message to the recipient's socket using Socket.IO
+      io.to(recipientSocketId).emit("testMessage", { senderId: userId, message, recipientId });
+      console.log('testMessage sent successfully')
+      // Optionally, emit an acknowledgment back to the sender
+      socket.emit("messageSentConfirmation", { recipientId, message });
+    } catch (error) {
+      console.error("Error:", error);
+      socket.emit("recipientNotFound", { recipientId, message });
+    }
 
-    io.to(recipientId).emit("testMessage", receivingMessage);
-    console.log("Message sent:", receivingMessage)
-    // Optionally, emit an acknowledgment back to the sender
-    socket.emit("messageSentConfirmation", { recipientId, message });
+    // Emitting message to the recipient
   });
 });
-
 
 module.exports = { app, server };
