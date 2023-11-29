@@ -18,7 +18,8 @@
     "mailjet": "^0.0.1",
     "mongoose": "^8.0.0",
     "morgan": "^1.10.0",
-    "node-mailjet": "^6.0.4"
+    "node-mailjet": "^6.0.4",
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "esm": "^3.2.25",
