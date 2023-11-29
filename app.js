@@ -166,28 +166,34 @@ const io = new Server(server, {
 //   });
 // });
 
-// const userSockets = {};
+const userSockets = {};
 
 io.on("connection", (socket) => {
   socket.on("login", async (userId) => {
     console.log("userId", userId);
     try {
       let userSocketData = await UserSocketModel.findOne({ userId });
+      console.log('socket.id',socket.id)
 
       if (!userSocketData) {
         userSocketData = await UserSocketModel.create({
-          userId,
+         user: userId,
           socketId: socket.id,
         });
       }
+        const updatedsocketData=await UserSocketModel.findOneAndUpdate(
+          { user: userId },
+          { $set: { socketId: socket.id } },
+          { upsert: true }
+        );
 
       userSockets[userId] = socket;
-      // console.log("userSockets[userId]", userSockets[userId]);
+      console.log("userSocketsId", userSocketData.socketId);
       // Handle disconnect logic when the user disconnects
       socket.on("disconnect", async () => {
         try {
           await UserSocketModel.findByIdAndUpdate(
-            userId,
+            user,
             { $set: { online: false } },
             { new: true }
           );
@@ -204,15 +210,27 @@ io.on("connection", (socket) => {
   socket.on("privateMessage", async (messageData) => {
     const { recipientId, message, userId } = messageData;
     console.log(messageData.message);
+    console.log("socket.id",socket.id);
+
     // Handling user association with socket
     try {
       // Retrieve the socketId associated with the recipientId from MongoDB
-      const recipientSocketInfo = await UserSocketModel.findOne({ userId: recipientId });
-      const recipientSocketId = recipientSocketInfo.socketId;
-  console.log('recipientSocketId',recipientSocketId)
-      // Emit message to the recipient's socket using Socket.IO
-      io.to(recipientSocketId).emit("testMessage", { senderId: userId, message, recipientId });
-      console.log('testMessage sent successfully')
+      // const recipientSocketInfo = await UserSocketModel.findOne({
+      //   user: recipientId,
+      // });
+      // if (recipientSocketInfo && recipientSocketInfo.socketId) {
+      //   const recipientSocketId = recipientSocketInfo.socketId;
+        // Emit the message to the recipient using the retrieved socketId
+        io.to(recipientId).emit("testMessage", {
+          senderId: userId,
+          message,
+          recipientId,
+        });
+        console.log("testMessage sent successfully");
+      // } else {
+      //   console.error("Recipient socketId not found");
+      //   // Handle the scenario where the recipient's socketId is not found
+      // }
       // Optionally, emit an acknowledgment back to the sender
       socket.emit("messageSentConfirmation", { recipientId, message });
     } catch (error) {

@@ -3,7 +3,8 @@ const { Schema, model } = require("mongoose");
 // TODO: Please make sure you edit the User model to whatever makes sense in this case
 const UserSocketSchema = new Schema(
   {
-    userId: { type: String, required: true },
+    user: {type: Schema.Types.ObjectId,
+            ref: "User"},
     socketId: { type: String, required: true },
     online: {
         type: Boolean,

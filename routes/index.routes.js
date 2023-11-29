@@ -3,7 +3,7 @@ const router = express.Router();
 const Department = require("../models/Department.model");
 const Doctor = require("../models/Doctor.model");
 const GPractice = require("../models/GPractice.model");
-
+const UserSocketModel=require('../models/UserSocketModel')
 router.get("/", (req, res, next) => {
   res.json("Home page All good in here");
 });
@@ -31,6 +31,15 @@ router.get("/search", (req, res, next) => {
     .catch((error) => {
       console.log("error while finding department ", error);
     });
+});
+
+router.get("/usersocket", (req, res, next) => {
+  UserSocketModel.find()
+  .populate('user')
+  .then(response=>{
+    res.json(response)
+  })
+
 });
 
 module.exports = router;

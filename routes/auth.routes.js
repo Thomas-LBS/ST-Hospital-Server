@@ -122,11 +122,11 @@ router.post("/signup", (req, res, next) => {
       }
       console.log(createdUser.email);
 
-      if (createdUser.role === "doctor") {
+      if (createdUser.role === "doctor" || createdUser.role === "admin") {
         sendGeneralMail(
           `${createdUser.email}`,
           "Login Credentials",
-          `Hi Dr.${createdUser.firstname} ${createdUser.lastname}. Your login credentials have been created by the Admin and you can find them below.You can change the credentials for 24 hours from now after which you will need to request them again if it remains unchanged.
+          `Hi ${createdUser.firstname} ${createdUser.lastname}. Your login credentials have been created by the Admin and you can find them below.You can change the credentials for 24 hours from now after which you will need to request them again if it remains unchanged.
         Username:${createdUser.username}
         Password:${password}
         email:${createdUser.email}`
