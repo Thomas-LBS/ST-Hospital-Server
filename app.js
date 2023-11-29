@@ -52,77 +52,119 @@ require("./error-handling")(app);
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // Replace with your client's URL
-    methods: ["GET", "POST"], // Add the required methods
+    origin: "http://localhost:5173", 
+    methods: ["GET", "POST"], 
   },
 });
+// const userSockets = {}
 
-// io.on('connection', (socket) => {
-//     console.log(`User connected: ${socket.id}`)
+// io.on("connection", (socket) => {
+//     // console.log('tesitng')
+//   socket.on("login", (userId) => {
+//     console.log(userId);
+//     UserSocketModel.findOne({ userId })
+//       .then((userSocketData) => {
+//         if (!userSocketData) {
+//           return UserSocketModel.create({ userId, socketId: socket.id });
+//         }
+//         return userSocketData;
+//       })
+//       .then((userSocketData) => {
+//         userSockets[userId] = socket;
 
-//   socket.on('disconnect', () => {
-//     console.log(`User disconnected: ${socket.id}`);
+//         // Handle disconnect logic if needed
+//         socket.on("disconnect", () => {
+//           UserSocketModel.findByIdAndUpdate(
+//             userId,
+//             { $set: { online: false } },
+//             { new: true }
+//           )
+//             .then(() => {
+//               console.log(`User disconnected: ${userId}`);
+//               delete userSockets[userId];
+//             })
+//             .catch((error) => {
+//               console.error("Error on user disconnection:", error);
+//             });
+//         });
+//       })
+//       .catch((error) => {
+//         console.error("Error:", error);
+//       });
 //   });
+//   socket.on("privateMessage", (messageData) => {
+//     const { recipientId, message,userId } = messageData;
+//     console.log("privateMessage triggered:");
+//     console.log("message:", messageData.message);
+//     // Check recipient's status or perform other actions
+//     // Example: UserSocketModel.getStatus(recipientId)
+//     //   .then((recipientStatus) => {
+//     //     if (recipientStatus === 'online') { ... } else { ... }
+//     //   })
+//     //   .catch((error) => {
+//     //     console.error('Error checking recipient status:', error);
+//     //   });
+//     const receivingMessage={
+//         senderId: userId,
+//         message,
+//       }
+//     io.to(recipientId).emit("doctorMessage", receivingMessage);
+//     // Optionally, emit an acknowledgment back to the sender
 
-//   // Handle messaging between doctors here
-//   socket.on('doctorMessage', (message) => {
-//     console.log(`Doctor ${socket.id} sent a message: ${message}`);
-
-//     // Broadcast the message to other doctors or handle logic as per your requirement
-//     io.emit('doctorMessage', message);
+//     socket.emit("messageSentConfirmation", { recipientId, message });
 //   });
+ 
 // });
-
+const userSockets = {};
 
 io.on("connection", (socket) => {
-  socket.on("login", (userId) => {
-    UserSocketModel.findOne({ userId })
-      .then((userSocketData) => {
-        if (!userSocketData) {
-          return UserSocketModel.create({ userId, socketId: socket.id });
-        }
-        return userSocketData;
-      })
-      .then((userSocketData) => {
-        socket.on("disconnect", () => {
-          // Handle disconnect logic if needed
-          UserSocketModel.findByIdAndUpdate(
+  socket.on("login", async (userId) => {
+    console.log(userId);
+    try {
+      let userSocketData = await UserSocketModel.findOne({ userId });
+
+      if (!userSocketData) {
+        userSocketData = await UserSocketModel.create({ userId, socketId: socket.id });
+      }
+
+      userSockets[userId] = socket;
+
+      // Handle disconnect logic if needed
+      socket.on("disconnect", async () => {
+        try {
+          await UserSocketModel.findByIdAndUpdate(
             userId,
             { $set: { online: false } },
             { new: true }
-          )
-            .then(() => {
-              console.log(`User disconnected: ${userId}`);
-            })
-            .catch((error) => {
-              console.error("Error on user disconnection:", error);
-            });
-        });
-
-        socket.on("privateMessage", (messageData) => {
-          const { recipientId, message } = messageData;
-
-          // Check recipient's status or perform other actions
-          // Example: UserSocketModel.getStatus(recipientId)
-          //   .then((recipientStatus) => {
-          //     if (recipientStatus === 'online') { ... } else { ... }
-          //   })
-          //   .catch((error) => {
-          //     console.error('Error checking recipient status:', error);
-          //   });
-          io.to(recipientId).emit("privateMessage", {
-            senderId: userId,
-            message,
-          });
-          // Optionally, emit an acknowledgment back to the sender
-
-          socket.emit("messageSentConfirmation", { recipientId, message });
-        });
-      })
-      .catch((error) => {
-        console.error("Error:", error);
+          );
+          console.log(`User disconnected: ${userId}`);
+          delete userSockets[userId];
+        } catch (error) {
+          console.error("Error on user disconnection:", error);
+        }
       });
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  });
+
+  socket.on("privateMessage", async (messageData) => {
+    const { recipientId, message, userId } = messageData;
+    console.log("privateMessage triggered:");
+    console.log("message:", messageData.message);
+    
+    const receivingMessage = {
+      senderId: userId,
+      message,
+      recipientId:recipientId
+    };
+
+    io.to(recipientId).emit("testMessage", receivingMessage);
+    console.log("Message sent:", receivingMessage)
+    // Optionally, emit an acknowledgment back to the sender
+    socket.emit("messageSentConfirmation", { recipientId, message });
   });
 });
+
 
 module.exports = { app, server };

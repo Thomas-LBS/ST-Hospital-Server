@@ -41,6 +41,16 @@ const sendGeneralMail = function (mail, sub, msg) {
   });
 };
 
+router.get("/", (req, res, next) => {
+  User.find()
+    .then((users) => {
+      res.json(users);
+    })
+    .catch((error) => {
+      console.log("error", error);
+    });
+});
+
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
   const { email, password, name, role, firstname, lastname, patientDetails } =
@@ -212,7 +222,7 @@ router.post("/login", (req, res, next) => {
         });
 
         // Send the token as the response
-        res.status(200).json({ authToken: authToken });
+        res.status(200).json({ authToken: authToken, user: foundUser });
       } else {
         res.status(401).json({ message: "Unable to authenticate the user" });
       }
