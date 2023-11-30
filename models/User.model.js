@@ -29,6 +29,10 @@ const userSchema = new Schema(
       default: "patient",
       required: true,
     },
+    doctor: {
+      type: Schema.Types.ObjectId,
+      ref: "Doctor",
+    },
     patientDetails: {
       type: {
         dateOfBirth: Date,

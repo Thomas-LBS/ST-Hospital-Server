@@ -166,51 +166,53 @@ const io = new Server(server, {
 //   });
 // });
 
-const userSockets = {};
+// const userSockets = {};
 
 io.on("connection", (socket) => {
   socket.on("login", async (userId) => {
+    console.log("socket.id", socket.id);
     console.log("userId", userId);
     try {
-      let userSocketData = await UserSocketModel.findOne({ userId });
-      console.log('socket.id',socket.id)
-
-      if (!userSocketData) {
-        userSocketData = await UserSocketModel.create({
-         user: userId,
-          socketId: socket.id,
-        });
-      }
-        const updatedsocketData=await UserSocketModel.findOneAndUpdate(
-          { user: userId },
-          { $set: { socketId: socket.id } },
-          { upsert: true }
-        );
-
-      userSockets[userId] = socket;
-      console.log("userSocketsId", userSocketData.socketId);
-      // Handle disconnect logic when the user disconnects
-      socket.on("disconnect", async () => {
-        try {
-          await UserSocketModel.findByIdAndUpdate(
-            user,
-            { $set: { online: false } },
-            { new: true }
-          );
-          console.log(`User disconnected: ${userId}`);
-          delete userSockets[userId];
-        } catch (error) {
-          console.error("Error on user disconnection:", error);
-        }
+      // let userSocketData = await UserSocketModel.findOne({ userId });
+      
+      userSocketData = await UserSocketModel.create({
+        user: userId,
+        socketId: socket.id,
       });
+      console.log("userSocketData.socketId", userSocketData.socketId);
+    
+      // const updatedsocketData = await UserSocketModel.findOneAndUpdate(
+      //   { user: userId },
+      //   { $set: { socketId: socket.id } },
+      //   { upsert: true }
+      // );
+      // console.log("socket.id updatedsocketData", updatedsocketData.socketId);
+
+      // userSockets[userId] = socket;
+      // console.log("userSocketsId", userSocketData.socketId);
+      // Handle disconnect logic when the user disconnects
+      // socket.on("disconnect", async () => {
+      //   try {
+      //     await UserSocketModel.findOneAndDelete({user:userId});
+      //     console.log(`User disconnected: ${userId}`);
+      //     // delete userSockets[userId];
+      //   } catch (error) {
+      //     console.error("Error on user disconnection:", error);
+      //   }
+      // });
     } catch (error) {
       console.error("Error:", error);
     }
   });
+  // socket.on('diogo',(msg)=>{
+  //   console.log(msg)
+  //   socket.emit('diogo',(msg))
+  // })
   socket.on("privateMessage", async (messageData) => {
     const { recipientId, message, userId } = messageData;
     console.log(messageData.message);
-    console.log("socket.id",socket.id);
+    console.log("socket.id privateMessage", socket.id);
+    console.log("recipientId", recipientId);
 
     // Handling user association with socket
     try {
@@ -220,13 +222,13 @@ io.on("connection", (socket) => {
       // });
       // if (recipientSocketInfo && recipientSocketInfo.socketId) {
       //   const recipientSocketId = recipientSocketInfo.socketId;
-        // Emit the message to the recipient using the retrieved socketId
-        io.to(recipientId).emit("testMessage", {
-          senderId: userId,
-          message,
-          recipientId,
-        });
-        console.log("testMessage sent successfully");
+      // Emit the message to the recipient using the retrieved socketId
+      io.to(recipientId).emit("testMessage", {
+        senderId: userId,
+        message,
+        recipientId,
+      });
+      console.log("testMessage sent successfully");
       // } else {
       //   console.error("Recipient socketId not found");
       //   // Handle the scenario where the recipient's socketId is not found

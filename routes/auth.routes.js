@@ -53,7 +53,7 @@ router.get("/", (req, res, next) => {
 
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
-  const { email, password, name, role, firstname, lastname, patientDetails } =
+  const { email, password, name, role, firstname, lastname, patientDetails ,doctor} =
     req.body;
   // console.log(email, password, name ,role)
   // Check if email or password or name are provided as empty strings
@@ -111,6 +111,7 @@ router.post("/signup", (req, res, next) => {
         firstname: firstname,
         lastname: lastname,
         patientDetails: patientDetails,
+        doctor
       });
     })
     .then((createdUser) => {
@@ -183,6 +184,7 @@ router.post("/login", (req, res, next) => {
   // Check the users collection if a user with the same email exists
   User.findOne({ username: name })
     .populate("patientDetails.gp")
+    .populate('doctor')
     .then((foundUser) => {
       if (!foundUser) {
         // If the user is not found, send an error response
@@ -203,6 +205,7 @@ router.post("/login", (req, res, next) => {
           firstname,
           lastname,
           patientDetails,
+          doctor
         } = foundUser;
 
         // Create an object that will be set as the token payload
@@ -214,6 +217,7 @@ router.post("/login", (req, res, next) => {
           firstname,
           lastname,
           patientDetails,
+          doctor
         };
         // Create a JSON Web Token and sign it
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
