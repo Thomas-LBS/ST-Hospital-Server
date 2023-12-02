@@ -5,13 +5,13 @@ const patientRecordSchema = new Schema(
   {
     user: {
       type: { type: Schema.Types.ObjectId, ref: "User" },
-      required: true,
+      // required: true,
     },
 
     record:[ {
       doctor: {
         type: { type: Schema.Types.ObjectId, ref: "Doctor" },
-        required: true,
+        // required: true,
       },
       appointment: {
         type: [{ type: Schema.Types.ObjectId, ref: "Appointment" }],
@@ -41,8 +41,11 @@ const patientRecordSchema = new Schema(
             type: String,
           },
         },
-        weight: {
+        temperature: {
           value: {
+            type: String,
+          },
+          range: {
             type: String,
           },
         },
@@ -72,23 +75,24 @@ const patientRecordSchema = new Schema(
 );
 patientRecordSchema.pre("save", async function (next) {
   const bloodPressureValue = this.record.vitals.bloodPressure.value;
-  if (bloodPressureValue > "140/90") {
-    this.record.vitals.bloodPressure.range = "High";
-  } else if (bloodPressureValue < "90/60") {
-    this.record.vitals.bloodPressure.range = "Low";
-  } else {
-    this.record.vitals.bloodPressure.range = "Normal";
-  }
+const [systolic, diastolic] = bloodPressureValue.split('/').map(Number);
+
+if (systolic > 140 || diastolic > 90) {
+  this.record.vitals.bloodPressure.range = "High";
+} else if (systolic < 90 || diastolic < 60) {
+  this.record.vitals.bloodPressure.range = "Low";
+} else {
+  this.record.vitals.bloodPressure.range = "Normal";
+}
   next();
 });
 
 patientRecordSchema.pre("save", function (next) {
-  const heartRateValue = this.record.vitals.heartRate.value;
+  const heartRateValue = Number(this.record.vitals.heartRate.value); // Convert the string to a number
 
-  // Example logic for heart rate range calculation (customize as needed)
-  if (heartRateValue > "100") {
+  if (heartRateValue > 100) {
     this.record.vitals.heartRate.range = "High";
-  } else if (heartRateValue < "60") {
+  } else if (heartRateValue < 60) {
     this.record.vitals.heartRate.range = "Low";
   } else {
     this.record.vitals.heartRate.range = "Normal";
@@ -98,12 +102,11 @@ patientRecordSchema.pre("save", function (next) {
 });
 
 patientRecordSchema.pre("save", function (next) {
-  const pulseRateValue = this.record.vitals.pulseRate.value;
+  const pulseRateValue = Number(this.record.vitals.pulseRate.value); // Convert the string to a number
 
-  // Example logic for pulse rate range calculation (customize as needed)
-  if (pulseRateValue > "100") {
+  if (pulseRateValue > 100) {
     this.record.vitals.pulseRate.range = "High";
-  } else if (pulseRateValue < "60") {
+  } else if (pulseRateValue < 60) {
     this.record.vitals.pulseRate.range = "Low";
   } else {
     this.record.vitals.pulseRate.range = "Normal";
@@ -112,6 +115,19 @@ patientRecordSchema.pre("save", function (next) {
   next();
 });
 
+patientRecordSchema.pre("save", function (next) {
+  const temperatureValue = parseFloat(this.record.vitals.temperature.value); // Convert the string to a floating-point number
+
+  if (temperatureValue > 100.4) {
+    this.record.vitals.temperature.range = "High Fever";
+  } else if (temperatureValue < 97) {
+    this.record.vitals.temperature.range = "Low";
+  } else {
+    this.record.vitals.temperature.range = "Normal";
+  }
+
+  next();
+});
 const PatientRecord = model("PatientRecord", patientRecordSchema);
 
 module.exports = PatientRecord;

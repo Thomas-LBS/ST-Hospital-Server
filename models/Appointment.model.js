@@ -14,10 +14,10 @@ const appointmentSchema = new Schema(
       type: [{ type: Schema.Types.ObjectId, ref: "Doctor" }],
       required: [true, "Doctor is required."],
     },
-    // complaints: {
-    //   type: String,
-    //   required: [true, "Title is required."],
-    // },
+    complaints: {
+      type: String,
+      required: [true, "Title is required."],
+    },
     start:{
       type: Date,
       // required: [true, "Start Time is required."],

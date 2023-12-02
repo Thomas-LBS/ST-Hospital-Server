@@ -45,6 +45,9 @@ app.use("/create", createRoutes);
 const appointmentRoutes = require("./routes/appointment.routes");
 app.use("/appointment", appointmentRoutes);
 
+const patientRecordsRoutes = require("./routes/patientRecord.routes");
+app.use("/patientRecord", patientRecordsRoutes);
+
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
 
@@ -223,11 +226,22 @@ io.on("connection", (socket) => {
       // if (recipientSocketInfo && recipientSocketInfo.socketId) {
       //   const recipientSocketId = recipientSocketInfo.socketId;
       // Emit the message to the recipient using the retrieved socketId
+      if (recipientId) {
       io.to(recipientId).emit("testMessage", {
         senderId: userId,
         message,
         recipientId,
       });
+      console.log(`test message sent successfully`);
+
+    } else {
+      console.log(`User ${userId} is not connected`);
+    }
+      // io.sockets.connected[recipientId].emit("testMessage", {
+      //   senderId: userId,
+      //   message,
+      //   recipientId,
+      // });
       console.log("testMessage sent successfully");
       // } else {
       //   console.error("Recipient socketId not found");
