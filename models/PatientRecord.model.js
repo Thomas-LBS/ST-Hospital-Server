@@ -73,65 +73,10 @@ const patientRecordSchema = new Schema(
     timestamps: true,
   }
 );
-// patientRecordSchema.pre("save", async function (next) {
-//   this.record.forEach((record) => {
-//     const [systolic, diastolic] = record.vitals.bloodPressure.value.split('/').map(Number);
 
-//     if (systolic > 140 || diastolic > 90) {
-//       record.vitals.bloodPressure.range = "High";
-//     } else if (systolic < 90 || diastolic < 60) {
-//       record.vitals.bloodPressure.range = "Low";
-//     } else {
-//       record.vitals.bloodPressure.range = "Normal";
-//     }
-
-//   });
-//   next();
-// });
-
-// patientRecordSchema.pre("save", function (next) {
-//   const heartRateValue = Number(this.record.vitals.heartRate.value); // Convert the string to a number
-
-//   if (heartRateValue > 100) {
-//     this.record.vitals.heartRate.range = "High";
-//   } else if (heartRateValue < 60) {
-//     this.record.vitals.heartRate.range = "Low";
-//   } else {
-//     this.record.vitals.heartRate.range = "Normal";
-//   }
-
-//   next();
-// });
-
-// patientRecordSchema.pre("save", function (next) {
-//   const pulseRateValue = Number(this.record.vitals.pulseRate.value); // Convert the string to a number
-
-//   if (pulseRateValue > 100) {
-//     this.record.vitals.pulseRate.range = "High";
-//   } else if (pulseRateValue < 60) {
-//     this.record.vitals.pulseRate.range = "Low";
-//   } else {
-//     this.record.vitals.pulseRate.range = "Normal";
-//   }
-
-//   next();
-// });
-
-// patientRecordSchema.pre("save", function (next) {
-//   const temperatureValue = parseFloat(this.record.vitals.temperature.value); // Convert the string to a floating-point number
-
-//   if (temperatureValue > 100.4) {
-//     this.record.vitals.temperature.range = "High Fever";
-//   } else if (temperatureValue < 97) {
-//     this.record.vitals.temperature.range = "Low";
-//   } else {
-//     this.record.vitals.temperature.range = "Normal";
-//   }
-
-//   next();
-// });
 patientRecordSchema.pre("save", function (next) {
   this.record.forEach((record) => {
+        // Blood Pressure
     const [systolic, diastolic] = record.vitals.bloodPressure.value.split('/').map(Number);
 
     if (systolic > 140 || diastolic > 90) {
@@ -180,4 +125,3 @@ const PatientRecord = model("PatientRecord", patientRecordSchema);
 
 module.exports = PatientRecord;
 
-//can i have a function here which gets the bp data and calculates the range and save it in range

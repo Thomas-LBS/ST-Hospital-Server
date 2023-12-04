@@ -55,6 +55,8 @@ router.get("/", (req, res, next) => {
 // router.get("/:id", (req, res, next) => {
 //   const id = req.params.id;
 //   User.findById(id)
+// .populate('patientDetails.gp')
+
 //     .then((users) => {
 //       res.json(users);
 //     })

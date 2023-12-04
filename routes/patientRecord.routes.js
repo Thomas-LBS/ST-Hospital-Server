@@ -5,8 +5,8 @@ const PatientRecord = require("../models/PatientRecord.model");
 router.get("/", (req, res, next) => {
   PatientRecord.find()
     .populate("user")
-    .populate("record.doctor")
-    .populate("record.appointment")
+    // .populate("record.doctor")
+    // .populate("record.appointment")
     .then((records) => {
       res.json(records);
     })
@@ -80,7 +80,16 @@ router.post("/create", (req, res, next) => {
 
 router.get('/:id' ,(req, res, next) => {
     const userId=req.params.id
+    console.log('userId',userId)
     PatientRecord.findOne({user:userId})
+    .populate({
+      path: 'record',
+      populate: [
+          { path: 'doctor' }, // Populate the doctor field within the record array
+          { path: 'appointment' } // Populate the appointment field within the record array
+      ]
+  })
+    .populate('user')
     .then(foundRecord=>{
         res.json(foundRecord)
     })

@@ -35,6 +35,7 @@ const userSchema = new Schema(
     },
     patientDetails: {
       type: {
+        gender:String,
         dateOfBirth: Date,
         contactNumber: String,
         gp: [{ type: Schema.Types.ObjectId, ref: "GPractice" }],
