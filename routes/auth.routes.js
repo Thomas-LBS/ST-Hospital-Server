@@ -43,6 +43,7 @@ const sendGeneralMail = function (mail, sub, msg) {
 
 router.get("/", (req, res, next) => {
   User.find()
+  .populate('patientDetails.gp')
     .then((users) => {
       res.json(users);
     })
@@ -50,6 +51,17 @@ router.get("/", (req, res, next) => {
       console.log("error", error);
     });
 });
+
+// router.get("/:id", (req, res, next) => {
+//   const id = req.params.id;
+//   User.findById(id)
+//     .then((users) => {
+//       res.json(users);
+//     })
+//     .catch((error) => {
+//       console.log("error", error);
+//     });
+// });
 
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
