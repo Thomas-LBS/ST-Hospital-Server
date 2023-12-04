@@ -8,14 +8,11 @@ const patientRecordSchema = new Schema(
       // required: true,
     },
 
-    record:[ {
-      doctor: {
-        type: { type: Schema.Types.ObjectId, ref: "Doctor" },
-        // required: true,
-      },
-      appointment: {
-        type: [{ type: Schema.Types.ObjectId, ref: "Appointment" }],
-      },
+    record:[{
+      doctor: {type: Schema.Types.ObjectId, ref: "Doctor" },
+ 
+      appointment: { type: Schema.Types.ObjectId, ref: "Appointment" },
+     
       vitals: {
         bloodPressure: {
           value: {
