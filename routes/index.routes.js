@@ -33,13 +33,6 @@ router.get("/search", (req, res, next) => {
     });
 });
 
-router.get("/usersocket", (req, res, next) => {
-  UserSocketModel.find()
-  .populate('user')
-  .then(response=>{
-    res.json(response)
-  })
 
-});
 
 module.exports = router

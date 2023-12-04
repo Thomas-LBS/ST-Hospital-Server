@@ -1,11 +1,9 @@
 const { Schema, model } = require("mongoose");
 
-// TODO: Please make sure you edit the User model to whatever makes sense in this case
 const patientRecordSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId, ref: "User" ,
-      // required: true,
     },
 
     record:[{
@@ -49,15 +47,12 @@ const patientRecordSchema = new Schema(
       },
       complaints: {
         type: String,
-        // Define fields for patient complaints during the appointment
       },
       description: {
         type: String,
-        // Description of the appointment or medical findings
       },
       prescribedMedications: {
         type: String,
-        // Information about prescribed medications
       },
       createdAt: {
         type: Date,
@@ -66,14 +61,13 @@ const patientRecordSchema = new Schema(
     }],
   },
   {
-    // this second object adds extra properties: `createdAt` and `updatedAt`
     timestamps: true,
   }
 );
 
 patientRecordSchema.pre("save", function (next) {
   this.record.forEach((record) => {
-        // Blood Pressure
+    // Blood Pressure
     const [systolic, diastolic] = record.vitals.bloodPressure.value.split('/').map(Number);
 
     if (systolic > 140 || diastolic > 90) {
