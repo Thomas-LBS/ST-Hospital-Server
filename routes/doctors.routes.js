@@ -52,12 +52,12 @@ router.put("/update/:id", (req, res, next) => {
   Doctor.findById(doctorId)
     .populate("department") 
     .then((foundDoctor) => {
-      const oldDepartmentId = foundDoctor.department[0]._id;
+      const oldDepartmentId = foundDoctor.department._id;
 
       Doctor.findByIdAndUpdate(doctorId, updateDoctor, { new: true })
         .populate("department")
         .then((updatedDoctor) => {
-          const newDepartmentId = updatedDoctor.department[0]._id;
+          const newDepartmentId = updatedDoctor.department._id;
 
           Department.findByIdAndUpdate(
             oldDepartmentId,
