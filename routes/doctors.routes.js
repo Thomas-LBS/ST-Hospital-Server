@@ -22,7 +22,7 @@ router.post("/add", (req, res, next) => {
   
   Doctor.create(doctorData)
     .then((addedDoctor) => {
-      Department.findByIdAndUpdate(addedDoctor.department[0]._id,{ $push: { doctors: addedDoctor._id } },{new:true})
+      Department.findByIdAndUpdate(addedDoctor.department._id,{ $push: { doctors: addedDoctor._id } },{new:true})
       .then(addedDoctor=>{
 console.log(addedDoctor)
         res.json(addedDoctor);
