@@ -28,9 +28,9 @@ router.get("/search", (req, res, next) => {
         })
     })
     .catch((error) => {
-      console.log("error while finding department ", error);
-    });
-});
+      console.log("error while finding department ", error)
+    })
+})
 
 
 
