@@ -35,6 +35,7 @@ router.post("/create", (req, res, next) => {
     bloodPressure,
     heartRate,
   } = req.body;
+  console.log('user',user)
   PatientRecord.findOne({ user: user })
     .then((existingRecord) => {
       if (existingRecord) {
@@ -55,7 +56,7 @@ router.post("/create", (req, res, next) => {
         return existingRecord.save();
       } else {
         return PatientRecord.create({
-          user: "655bbdf9615e4f7fd590d86d",
+          user: user,
           record: [
             {
               doctor: doctor,
