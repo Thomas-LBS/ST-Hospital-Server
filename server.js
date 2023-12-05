@@ -9,10 +9,10 @@
 
 
 
-const { server } = require("./app");
+const { app } = require("./app");
 
 const PORT = process.env.PORT || 5005;
 
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
 });

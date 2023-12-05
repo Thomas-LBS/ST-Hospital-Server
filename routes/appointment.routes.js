@@ -55,7 +55,7 @@ router.get("/", (req, res, next) => {
 });
 router.post("/create", async (req, res, next) => {
   try {
-    const { user, department, doctor, start, end } = req.body;
+    const { user, department, doctor, start, end,complaints } = req.body;
     const fetchedUser = await User.findById(user);
     const fetchedDept = await Department.findById(department);
     const fetchedDoctor = await Doctor.findById(doctor);
@@ -66,6 +66,7 @@ router.post("/create", async (req, res, next) => {
       doctor: fetchedDoctor.id,
       start,
       end,
+      complaints,
     });
     // sendGeneralMail(
     //   `${fetchedUser.email}`,

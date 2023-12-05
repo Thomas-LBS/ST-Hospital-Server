@@ -1,34 +1,41 @@
 const { Schema, model } = require("mongoose");
 
-// TODO: Please make sure you edit the User model to whatever makes sense in this case
 const doctorSchema = new Schema(
   {
     firstname: {
       type: String,
-      required: [true, "Name is required."],
+      required: [true, "First name is required."],
     },
     lastname: {
       type: String,
-      required: [true, "Name is required."],
+      required: [true, "Last name is required."],
     },
     department: {
-      type:[ {type: Schema.Types.ObjectId,
-            ref: "Department"}],
+      type: Schema.Types.ObjectId,
+      ref: "Department",
       required: true,
     },
     position: {
       type: String,
-      enum: ["Chief", "Attending", "General"], 
+      enum: ["Chief", "Attending", "General"],
     },
-    appointment:{
-      type:[ {type: Schema.Types.ObjectId,
-        ref: "Appointment"}],
+    education: [
+      {
+        type: String,
+      },
+    ],
+    phoneNumber: {
+      type: String,
     },
+    appointment: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Appointment",
+      },
+    ],
     image: { type: String, default: "default_image_link.jpg" },
   },
-  
   {
-    // this second object adds extra properties: `createdAt` and `updatedAt`
     timestamps: true,
   }
 );
