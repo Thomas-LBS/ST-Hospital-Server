@@ -9,13 +9,18 @@ router.get("/", (req, res, next) => {
 
 router.get("/search", (req, res, next) => {
   const searchInput = req.query.input
-    Department.find({ name: searchInput })
+    Department.find({ name: { $regex: searchInput, $options: 'i' } })
     .populate('doctors')
     .then((department) => {
-      Doctor.find({ firstname: searchInput })
+      Doctor.find({
+        $or: [
+          { firstname: { $regex: searchInput, $options: 'i' } },
+          { lastname: { $regex: searchInput, $options: 'i' } }
+        ]
+      })
       .populate('department')
         .then((doctors) => {
-          GPractice.find({ name: searchInput })
+          GPractice.find({ name: { $regex: searchInput, $options: 'i' } })
             .then((gPractice) => {
               res.json({ department, doctors, gPractice })
             })
