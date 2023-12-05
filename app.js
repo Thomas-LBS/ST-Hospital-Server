@@ -15,7 +15,7 @@ const cors = require("cors")
 const app = express()
 app.use(cors())
 // ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
-require("./config")(app)
+require("./config")(app);
 
 // 👇 Start handling routes here
 const indexRoutes = require("./routes/index.routes")
