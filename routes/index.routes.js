@@ -4,7 +4,7 @@ const Department = require("../models/Department.model");
 const Doctor = require("../models/Doctor.model");
 const GPractice = require("../models/GPractice.model");
 router.get("/", (req, res, next) => {
-  res.json("Home page All good in here")
+  res.json("Server home page for ST Hospital")
 })
 
 router.get("/search", (req, res, next) => {

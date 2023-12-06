@@ -79,7 +79,7 @@ router.post("/signup", (req, res, next) => {
     lastname === ""
   ) {
     res.status(400).json({
-      message: "Provide email, password , name , firstname and lastname",
+      message: "Provide email, password, name, firstname and lastname",
     });
     return;
   }
