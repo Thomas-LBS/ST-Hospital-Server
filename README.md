@@ -10,7 +10,9 @@
 
 <h3>Github Client repository : <a href="https://github.com/Sunitha-Arockia-Dass/ST-Hospital-Client.git" target="_blank" >Here</a></h3>
 
-<h3>App deployed with ?? : <a href="#" target="_blank"></a></h3>
+<h3>App Server deployed with adaptabe : <a href="https://st-hospital-server.adaptable.app/" target="_blank">Here</a></h3>
+
+<h3>App Client deployed with Netlify : <a href="https://6572201300d1c000a6662a33--musical-buttercream-e1a1d2.netlify.app/#/" target="_blank">Here</a></h3>
 
 
 <h1>Introduction</h1>
@@ -167,6 +169,6 @@ Admin :
 
 <h2>emailJS</h2> to send appointments data by email.
 
-"tchatjs/socketIO WIP"
-
 <h2>GSAP</h2> to animate.
+
+"tchatjs/socketIO WIP"
