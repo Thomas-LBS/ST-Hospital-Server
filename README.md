@@ -4,7 +4,7 @@
 
 <h3>Follow the Trello Board : <a href="https://trello.com/invite/b/LJqzCzCl/ATTI2457db54afb77558ab662601bc60a286E6926B91/ironhack-project3-st-hospital" target="_blank">Here</a></h3>
 
-<h3>Slides presentation : <a href="https://slides.com/thomaslebas/sthospital#/presentation/1" target="_blank"></a></h3>
+<h3>Slides presentation : <a href="https://slides.com/thomaslebas/sthospital#/presentation/1" target="_blank">Here</a></h3>
 
 <h3>Github Server repository : <a href="https://github.com/Thomas-LBS/ST-Hospital-Server.git" target="_blank" >Here</a></h3>
 
