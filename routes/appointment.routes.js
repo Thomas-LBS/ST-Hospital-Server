@@ -212,29 +212,30 @@ router.patch("/patient/update/:id", (req, res, next) => {
     .populate("doctor")
     .populate("department")
     .then((appts) => {
-      // sendGeneralMail(
-      //   `${appts.user.email}`,
-      //   "Appointment Changed",
-      //   `Hi ${appts.user[0].firstname} ${
-      //     appts.user[0].lastname
-      //   }. You have changed your appointment with DR.${
-      //     appts.doctor[0].firstname
-      //   } ${appts.doctor[0].lastname} to ${convertTo12HourFormat(
-      //     appts.start
-      //   )} on ${new Date(appts.start).toDateString()}`
-      // )
-      //   .then((response) => {
-      //     console.log("Email sent!", response.body);
-      //     // Handle success
-      //   })
-      //   .catch((error) => {
-      //     console.error(
-      //       "Error sending email:",
-      //       error.statusCode,
-      //       error.message
-      //     );
-      //   });
-      res.json(appts);
+      sendGeneralMail(
+        `${appts.user.email}`,
+        "Appointment Changed",
+        `Hi ${appts.user[0].firstname} ${
+          appts.user[0].lastname
+        }. You have changed your appointment with DR.${
+          appts.doctor[0].firstname
+        } ${appts.doctor[0].lastname} to ${convertTo12HourFormat(
+          appts.start
+        )} on ${new Date(appts.start).toDateString()}`
+      )
+        .then((response) => {
+          console.log("Email sent!", response.body);
+          // Handle success
+          res.json(appts);
+
+        })
+        .catch((error) => {
+          console.error(
+            "Error sending email:",
+            error.statusCode,
+            error.message
+          );
+        });
     });
 });
 
@@ -246,29 +247,29 @@ router.delete("/patient/delete/:id", (req, res, next) => {
     .populate("department")
     .then((appts) => {
       console.log(appts);
-      // sendGeneralMail(
-      //   `${appts.user.email}`,
-      //   "Appointment Cancelled",
-      //   `Hi ${appts.user[0].firstname} ${
-      //     appts.user[0].lastname
-      //   }. You have cancelled your appointment with DR.${
-      //     appts.doctor[0].firstname
-      //   } ${appts.doctor[0].lastname} at ${convertTo12HourFormat(
-      //     appts.start
-      //   )} on ${new Date(appts.start).toDateString()}`
-      // )
-      //   .then((response) => {
-      //     console.log("Email sent!", response.body);
-      //     // Handle success
-      //   })
-      //   .catch((error) => {
-      //     console.error(
-      //       "Error sending email:",
-      //       error.statusCode,
-      //       error.message
-      //     );
-      //   });
-      res.json(appts);
+      sendGeneralMail(
+        `${appts.user.email}`,
+        "Appointment Cancelled",
+        `Hi ${appts.user[0].firstname} ${
+          appts.user[0].lastname
+        }. You have cancelled your appointment with DR.${
+          appts.doctor[0].firstname
+        } ${appts.doctor[0].lastname} at ${convertTo12HourFormat(
+          appts.start
+        )} on ${new Date(appts.start).toDateString()}`
+      )
+        .then((response) => {
+          console.log("Email sent!", response.body);
+          // Handle success
+          res.json(appts);
+        })
+        .catch((error) => {
+          console.error(
+            "Error sending email:",
+            error.statusCode,
+            error.message
+          );
+        });
     });
 });
 
