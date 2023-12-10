@@ -3,33 +3,31 @@ const router = express.Router();
 const Doctor = require("../models/Doctor.model");
 const Department = require("../models/Department.model");
 
-
 router.get("/", (req, res, next) => {
   Doctor.find()
-  .populate('department')
+    .populate("department")
     .then((doctors) => {
       res.json(doctors);
     })
     .catch((error) => {
-      console.error("Error getting doctors:", error);
+      res.json(error);
     });
 });
 
-
 router.post("/add", (req, res, next) => {
   const doctorData = req.body;
-  // console.log("doctor Data", doctorData);
-  
   Doctor.create(doctorData)
     .then((addedDoctor) => {
-      Department.findByIdAndUpdate(addedDoctor.department._id,{ $push: { doctors: addedDoctor._id } },{new:true})
-      .then(addedDoctor=>{
-console.log(addedDoctor)
+      Department.findByIdAndUpdate(
+        addedDoctor.department._id,
+        { $push: { doctors: addedDoctor._id } },
+        { new: true }
+      ).then((addedDoctor) => {
         res.json(addedDoctor);
-      })
+      });
     })
     .catch((error) => {
-      console.error("Error adding doctor:", error);
+      res.json(error);
     });
 });
 
@@ -41,7 +39,7 @@ router.get("/:id", (req, res, next) => {
       res.json(doctor);
     })
     .catch((error) => {
-      console.error("Error getting doctor:", error);
+      res.json(error);
     });
 });
 
@@ -50,7 +48,7 @@ router.put("/update/:id", (req, res, next) => {
   const updateDoctor = req.body;
 
   Doctor.findById(doctorId)
-    .populate("department") 
+    .populate("department")
     .then((foundDoctor) => {
       const oldDepartmentId = foundDoctor.department._id;
 
@@ -74,22 +72,23 @@ router.put("/update/:id", (req, res, next) => {
           });
         })
         .catch((error) => {
-          console.error("Error updating Doctor:", error);
           res.status(500).json({ error: "Error updating Doctor" });
         });
     })
     .catch((error) => {
-      console.error("Error finding Doctor:", error);
       res.status(500).json({ error: "Error finding Doctor" });
     });
 });
 
-
 router.delete("/:id", (req, res, next) => {
   const doctorId = req.params.id;
-  Doctor.findByIdAndDelete(doctorId).then((doctor) => {
-    res.json("doctor deleted");
-  });
+  Doctor.findByIdAndDelete(doctorId)
+    .then((doctor) => {
+      res.json("doctor deleted");
+    })
+    .catch((error) => {
+      res.status(500).json({ error: "Error deleting Doctor" });
+    });
 });
 
 module.exports = router;

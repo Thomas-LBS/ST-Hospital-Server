@@ -4,21 +4,18 @@ const PatientRecord = require("../models/PatientRecord.model");
 
 router.get("/", (req, res, next) => {
   PatientRecord.find()
-  .populate({ 
-    path: 'user', 
-    populate: {
-      path: 'record',
-      populate: [
-        { path: 'doctor' },
-        { path: 'appointment' }
-      ]
-    }
-  })
+    .populate({
+      path: "user",
+      populate: {
+        path: "record",
+        populate: [{ path: "doctor" }, { path: "appointment" }],
+      },
+    })
     .then((records) => {
       res.json(records);
     })
     .catch((error) => {
-      console.log("error", error);
+      res.json(error);
     });
 });
 
@@ -35,7 +32,6 @@ router.post("/create", (req, res, next) => {
     bloodPressure,
     heartRate,
   } = req.body;
-  console.log('user',user)
   PatientRecord.findOne({ user: user })
     .then((existingRecord) => {
       if (existingRecord) {
@@ -76,32 +72,27 @@ router.post("/create", (req, res, next) => {
       }
     })
     .then((savedRecord) => {
-      console.log(savedRecord);
       res.json(savedRecord);
     })
     .catch((error) => {
-      console.log("error", error);
       res.status(500).json({ error: "Internal server error" });
     });
-}); 
+});
 
-router.get('/:id' ,(req, res, next) => {
-    const userId=req.params.id
-    PatientRecord.findOne({user:userId})
+router.get("/:id", (req, res, next) => {
+  const userId = req.params.id;
+  PatientRecord.findOne({ user: userId })
     .populate({
-      path: 'record',
-      populate: [
-        { path: 'doctor' },
-        { path: 'appointment' }
-      ]
+      path: "record",
+      populate: [{ path: "doctor" }, { path: "appointment" }],
     })
-    .populate('user')
-    .then(foundRecord=>{
-        res.json(foundRecord)
+    .populate("user")
+    .then((foundRecord) => {
+      res.json(foundRecord);
     })
-    .catch(error=>{
-        console.log('error',error)
-    })
-})
+    .catch((error) => {
+      res.json(records);
+    });
+});
 
 module.exports = router;

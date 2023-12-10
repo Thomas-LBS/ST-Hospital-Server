@@ -18,9 +18,9 @@ const sendReminderSMS = async (phoneNumber, message) => {
     "https://sms.api.sinch.com/xms/v1/cbebf37557b74f8bb754f9d35756b6fe/batches";
 
   const requestBody = {
-    from: "0682827102", 
-    to: [phoneNumber], 
-    body: message, 
+    from: "0682827102",
+    to: [phoneNumber],
+    body: message,
   };
 
   try {
@@ -30,10 +30,8 @@ const sendReminderSMS = async (phoneNumber, message) => {
         "Content-Type": "application/json",
       },
     });
-
-    console.log("SMS Sent!", response.data);
   } catch (error) {
-    console.error("Error sending SMS:", error.message);
+    res.json(error);
   }
 };
 
@@ -81,44 +79,7 @@ router.get("/", (req, res, next) => {
       res.json(appts);
     });
 });
-// router.post("/create", async (req, res, next) => {
-//   try {
-//     const { user, department, doctor, start, end,complaints } = req.body;
-//     const fetchedUser = await User.findById(user);
-//     const fetchedDept = await Department.findById(department);
-//     const fetchedDoctor = await Doctor.findById(doctor);
 
-//     const createdAppointment = await Appointment.create({
-//       user: fetchedUser.id,
-//       department: fetchedDept.id,
-//       doctor: fetchedDoctor.id,
-//       start,
-//       end,
-//       complaints,
-//     });
-//     // sendGeneralMail(
-//     //   `${fetchedUser.email}`,
-//     //   "Appointment Confirmation",
-//     //   `Hi ${fetchedUser.firstname} ${
-//     //     fetchedUser.lastname
-//     //   }. You have booked an appointment with DR.${fetchedDoctor.firstname} ${
-//     //     fetchedDoctor.lastname
-//     //   } at ${convertTo12HourFormat(createdAppointment.start)} on ${new Date(
-//     //     createdAppointment.start
-//     //   ).toDateString()}`
-//     // )
-//     //   .then((response) => {
-//     //     console.log("Email sent!", response.body);
-//     //   })
-//     //   .catch((error) => {
-//     //     console.error("Error sending email:", error.statusCode, error.message);
-//     //   });
-//     res.json(createdAppointment);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Error creating appointment" });
-//   }
-// });
 router.post("/create", async (req, res, next) => {
   try {
     const { user, department, doctor, start, end, complaints } = req.body;
@@ -145,11 +106,9 @@ router.post("/create", async (req, res, next) => {
         createdAppointment.start
       ).toDateString()}`
     )
-      .then((response) => {
-        console.log("Email sent!", response.body);
-      })
+      .then((response) => {})
       .catch((error) => {
-        console.error("Error sending email:", error.statusCode, error.message);
+        res.json(error);
       });
     // Calculate the time 24 hours before the appointment
     const reminderTime = new Date(start);
@@ -174,7 +133,6 @@ router.post("/create", async (req, res, next) => {
 
     res.json(createdAppointment);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Error creating appointment" });
   }
 });
@@ -224,17 +182,11 @@ router.patch("/patient/update/:id", (req, res, next) => {
         )} on ${new Date(appts.start).toDateString()}`
       )
         .then((response) => {
-          console.log("Email sent!", response.body);
           // Handle success
           res.json(appts);
-
         })
         .catch((error) => {
-          console.error(
-            "Error sending email:",
-            error.statusCode,
-            error.message
-          );
+          res.json(error);
         });
     });
 });
@@ -246,7 +198,6 @@ router.delete("/patient/delete/:id", (req, res, next) => {
     .populate("doctor")
     .populate("department")
     .then((appts) => {
-      console.log(appts);
       sendGeneralMail(
         `${appts.user.email}`,
         "Appointment Cancelled",
@@ -259,16 +210,11 @@ router.delete("/patient/delete/:id", (req, res, next) => {
         )} on ${new Date(appts.start).toDateString()}`
       )
         .then((response) => {
-          console.log("Email sent!", response.body);
           // Handle success
           res.json(appts);
         })
         .catch((error) => {
-          console.error(
-            "Error sending email:",
-            error.statusCode,
-            error.message
-          );
+          res.json(error);
         });
     });
 });

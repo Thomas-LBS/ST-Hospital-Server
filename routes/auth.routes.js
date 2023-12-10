@@ -43,33 +43,27 @@ const sendGeneralMail = function (mail, sub, msg) {
 
 router.get("/", (req, res, next) => {
   User.find()
-  .populate('patientDetails.gp')
+    .populate("patientDetails.gp")
     .then((users) => {
       res.json(users);
     })
     .catch((error) => {
-      console.log("error", error);
+      res.json(error);
     });
 });
 
-// router.get("/:id", (req, res, next) => {
-//   const id = req.params.id;
-//   User.findById(id)
-// .populate('patientDetails.gp')
-
-//     .then((users) => {
-//       res.json(users);
-//     })
-//     .catch((error) => {
-//       console.log("error", error);
-//     });
-// });
-
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
-  const { email, password, name, role, firstname, lastname, patientDetails ,doctor} =
-    req.body;
-  // console.log(email, password, name ,role)
+  const {
+    email,
+    password,
+    name,
+    role,
+    firstname,
+    lastname,
+    patientDetails,
+    doctor,
+  } = req.body;
   // Check if email or password or name are provided as empty strings
   if (
     email === "" ||
@@ -92,14 +86,14 @@ router.post("/signup", (req, res, next) => {
   }
 
   // // This regular expression checks password for special characters and minimum length
-  // const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
-  // if (!passwordRegex.test(password)) {
-  //   res.status(400).json({
-  //     message:
-  //       "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
-  //   });
-  //   return;
-  // }
+  const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+  if (!passwordRegex.test(password)) {
+    res.status(400).json({
+      message:
+        "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
+    });
+    return;
+  }
 
   // Check the users collection if a user with the same email already exists
   User.findOne({ email })
@@ -116,7 +110,6 @@ router.post("/signup", (req, res, next) => {
 
       // Create the new user in the database
       // We return a pending promise, which allows us to chain another `then`
-      console.log("hashedPassword", hashedPassword);
       return User.create({
         email,
         password: hashedPassword,
@@ -125,7 +118,7 @@ router.post("/signup", (req, res, next) => {
         firstname: firstname,
         lastname: lastname,
         patientDetails: patientDetails,
-        doctor
+        doctor,
       });
     })
     .then((createdUser) => {
@@ -135,7 +128,6 @@ router.post("/signup", (req, res, next) => {
         res.status(500).json({ message: "Error creating user." });
         return;
       }
-      console.log(createdUser.email);
 
       if (createdUser.role === "doctor" || createdUser.role === "admin") {
         sendGeneralMail(
@@ -147,7 +139,6 @@ router.post("/signup", (req, res, next) => {
         email:${createdUser.email}`
         )
           .then((response) => {
-            console.log("Email sent!", response.body);
             const {
               email: userEmail,
               name: userName,
@@ -160,27 +151,14 @@ router.post("/signup", (req, res, next) => {
               _id: userId,
               role: userRole,
             };
-            console.log(userObject);
 
             return res.status(201).json({ user: userObject });
             // Handle success
           })
           .catch((error) => {
-            console.error(
-              "Error sending email:",
-              error.statusCode,
-              error.message
-            );
+            res.json(error);
           });
       }
-      //   const { email, name, _id, role } = createdUser;
-
-      // // Create a new object that doesn't expose the password
-      // const userObject = { email, name, _id, role };
-      // console.log(userObject);
-      // res.status(201).json({ user: userObject });
-
-      // Send a json response containing the user object
     })
     .catch((err) => next(err)); // In this case, we send error handling to the error handling middleware.
 });
@@ -198,7 +176,7 @@ router.post("/login", (req, res, next) => {
   // Check the users collection if a user with the same email exists
   User.findOne({ username: name })
     .populate("patientDetails.gp")
-    .populate('doctor')
+    .populate("doctor")
     .then((foundUser) => {
       if (!foundUser) {
         // If the user is not found, send an error response
@@ -219,7 +197,7 @@ router.post("/login", (req, res, next) => {
           firstname,
           lastname,
           patientDetails,
-          doctor
+          doctor,
         } = foundUser;
 
         // Create an object that will be set as the token payload
@@ -231,7 +209,7 @@ router.post("/login", (req, res, next) => {
           firstname,
           lastname,
           patientDetails,
-          doctor
+          doctor,
         };
         // Create a JSON Web Token and sign it
         const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
@@ -288,21 +266,20 @@ router.put("/update/:id", (req, res, next) => {
     return;
   }
   // // This regular expression checks password for special characters and minimum length
-  // const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
-  // if (!passwordRegex.test(password)) {
-  //   res.status(400).json({
-  //     message:
-  //       "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
-  //   });
-  //   return;
-  // }
+  const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+  if (!passwordRegex.test(password)) {
+    res.status(400).json({
+      message:
+        "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
+    });
+    return;
+  }
 
   if (newPassword === "") {
     newPassword = password;
   }
   User.findById(userId)
     .then((foundUser) => {
-      // console.log("foundUser", foundUser);
       // If the user with the same email already exists, send an error response
       if (!foundUser) {
         res.status(400).json({ message: "User Not Found." });
@@ -317,10 +294,6 @@ router.put("/update/:id", (req, res, next) => {
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashedPassword = bcrypt.hashSync(newPassword, salt);
 
-      // bcrypt
-      //   .genSalt(saltRounds)
-      //   .then((salt) => bcrypt.hashSync(newPassword, salt))
-      //   .then((hashedPassword) => {
       // Create a user and save it in the database
       return User.findByIdAndUpdate(
         userId,
@@ -335,14 +308,12 @@ router.put("/update/:id", (req, res, next) => {
         },
         { new: true }
       ).then((updatedUser) => {
-        console.log("updated user", updatedUser);
         if (!updatedUser) {
           res.status(500).json({ message: "Error creating user." });
           return;
         }
         const { email, username, _id, role } = updatedUser;
         const user = { email, username, _id, role };
-        console.log(user);
         // Send a json response containing the user object
         res.status(201).json({ user: user });
       });

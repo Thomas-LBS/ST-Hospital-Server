@@ -1,19 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const Department = require("../models/Department.model");
-// const mailjet = require("node-mailjet").apiConnect(
-//   process.env.MAILJET_API_KEY,
-//   process.env.MAILJET_API_SECRET
-// );
 
 router.get("/", (req, res, next) => {
   Department.find()
-  .populate('doctors')
+    .populate("doctors")
     .then((departments) => {
       res.json(departments);
     })
     .catch((error) => {
-      console.error("Error getting departments:", error);
+      res.json(error);
     });
 });
 
@@ -25,7 +21,7 @@ router.post("/add", (req, res, next) => {
       res.json(addedDept);
     })
     .catch((error) => {
-      console.error("Error adding department:", error);
+      res.json(error);
     });
 });
 
@@ -37,7 +33,7 @@ router.get("/:id", (req, res, next) => {
       res.json(department);
     })
     .catch((error) => {
-      console.error("Error getting departments:", error);
+      res.json(error);
     });
 });
 
@@ -50,15 +46,19 @@ router.put("/update/:id", (req, res, next) => {
       res.json(updatedDepartment);
     })
     .catch((error) => {
-      console.error("Error getting departments:", error);
+      res.json(error);
     });
 });
 
 router.delete("/delete/:id", (req, res, next) => {
   const deptId = req.params.id;
-  Department.findByIdAndDelete(deptId).then((dept) => {
-    res.json("Dept deleted");
-  });
+  Department.findByIdAndDelete(deptId)
+    .then((dept) => {
+      res.json("Dept deleted");
+    })
+    .catch((error) => {
+      res.json(error);
+    });
 });
 
 module.exports = router;
