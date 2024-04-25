@@ -243,6 +243,9 @@ router.delete("/patient/delete/:id", (req, res, next) => {
         });
     });
 });
+router.get("/sendMail", (req, res, next) => {
+  res.json("everything working fine here")
+})
 router.post("/sendMail", (req, res, next) => {
   const { name, senderEmail, subject, message } = req.body;
 
