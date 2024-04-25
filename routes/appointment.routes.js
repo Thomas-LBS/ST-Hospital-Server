@@ -241,7 +241,7 @@ router.delete("/patient/delete/:id", (req, res, next) => {
     });
 });
 router.get("/sendMail", (req, res, next) => {
-  res.json("everything working fine here")
+  res.json("everything working fine here but still failing")
 })
 router.post("/sendMail", (req, res, next) => {
   const { name, senderEmail, subject, message } = req.body;
