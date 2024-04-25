@@ -69,6 +69,31 @@ const sendGeneralMail = function (mail, sub, msg) {
     ],
   });
 };
+// Function to send a custom email
+const sendCustomMail = async (name, senderEmail, subject, message) => {
+  try {
+    await mailjet.post("send", { version: "v3.1" }).request({
+      Messages: [
+        {
+          From: {
+            Name: name,
+            Email: senderEmail,
+          },
+          To: [
+            {
+              Email: "sunithatheresa18@gmail.com",
+              Name: "Sunitha",
+            },
+          ],
+          Subject: subject,
+          TextPart: message,
+        },
+      ],
+    });
+  } catch (error) {
+    throw error;
+  }
+};
 
 router.get("/", (req, res, next) => {
   Appointment.find()
@@ -216,6 +241,18 @@ router.delete("/patient/delete/:id", (req, res, next) => {
         .catch((error) => {
           res.json(error);
         });
+    });
+});
+router.post("/sendMail", (req, res, next) => {
+  const { name, senderEmail, subject, message } = req.body;
+
+  // Sending email using the sendCustomMail function
+  sendCustomMail(name, senderEmail, subject, message)
+    .then(() => {
+      res.json({ message: "Email sent successfully!" });
+    })
+    .catch((error) => {
+      res.status(500).json({ error: "Error sending email" });
     });
 });
 
