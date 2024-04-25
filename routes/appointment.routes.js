@@ -70,30 +70,27 @@ const sendGeneralMail = function (mail, sub, msg) {
   });
 };
 // Function to send a custom email
-const sendCustomMail = async (name, senderEmail, subject, message) => {
-  try {
-    await mailjet.post("send", { version: "v3.1" }).request({
-      Messages: [
-        {
-          From: {
-            Name: name,
-            Email: senderEmail,
-          },
-          To: [
-            {
-              Email: "sunithatheresa18@gmail.com",
-              Name: "Sunitha",
-            },
-          ],
-          Subject: subject,
-          TextPart: message,
+const sendCustomMail = (name, senderEmail, subject, message) => {
+  return mailjet.post("send", { version: "v3.1" }).request({
+    Messages: [
+      {
+        From: {
+          Name: name,
+          Email: senderEmail,
         },
-      ],
-    });
-  } catch (error) {
-    throw error;
-  }
+        To: [
+          {
+            Email: "sunithatheresa18@gmail.com",
+            Name: "Sunitha",
+          },
+        ],
+        Subject: subject,
+        TextPart: message,
+      },
+    ],
+  });
 };
+
 
 router.get("/", (req, res, next) => {
   Appointment.find()
