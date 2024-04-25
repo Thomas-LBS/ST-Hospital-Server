@@ -255,7 +255,7 @@ router.post("/sendMail", (req, res, next) => {
       res.json({ message: "Email sent successfully!" });
     })
     .catch((error) => {
-      res.status(500).json({ error: "Error sending email" });
+      res.status(404).json({ error: "Error sending email" });
     });
 });
 
