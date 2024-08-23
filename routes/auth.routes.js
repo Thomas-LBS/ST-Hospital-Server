@@ -45,6 +45,7 @@ router.get("/", (req, res, next) => {
   User.find()
     .populate("patientDetails.gp")
     .then((users) => {
+      console.log(users)
       res.json(users);
     })
     .catch((error) => {
